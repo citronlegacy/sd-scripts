@@ -84,7 +84,8 @@ def _load_target_model(
         # Diffusers model is loaded to CPU
         from diffusers import StableDiffusionXLPipeline
 
-        variant = "fp16" if weight_dtype == torch.float16 else None
+        #variant = "fp16" if weight_dtype == torch.float16 else None
+        variant = None
         logger.info(f"load Diffusers pretrained models: {name_or_path}, variant={variant}")
         try:
             try:
@@ -345,6 +346,8 @@ def add_sdxl_training_arguments(parser: argparse.ArgumentParser):
 
 def verify_sdxl_training_args(args: argparse.Namespace, supportTextEncoderCaching: bool = True):
     assert not args.v2, "v2 cannot be enabled in SDXL training / SDXL学習ではv2を有効にすることはできません"
+    if args.v_parameterization:
+        logger.warning("v_parameterization will be unexpected / SDXL学習ではv_parameterizationは想定外の動作になります")
 
     if args.clip_skip is not None:
         logger.warning("clip_skip will be unexpected / SDXL学習ではclip_skipは動作しません")
